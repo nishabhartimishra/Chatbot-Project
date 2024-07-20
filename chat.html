@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WineBuddy</title>
+    <style>
+      <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f2f2f2;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        .header {
+            background-color: #800020; /* Burgundy */
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+        }
+        .header .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .header .navbar {
+            display: flex;
+            justify-content: center;
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        .header .navbar li {
+            margin: 0 15px;
+        }
+        .header .navbar a {
+            color: white;
+            text-decoration: none;
+        }
+        .header .navbar a:hover {
+            text-decoration: underline;
+        }
+        .content {
+            flex: 1;
+            display: flex;
+            align-items: stretch; /* Ensures both sides stretch to match height */
+        }
+        .video-container {
+            flex: 2; /* Takes up 70% of the available space */
+            max-width: 70%; /* Adjust as needed */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #fff;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow: hidden; /* Prevents video from overflowing */
+        }
+        .video-container video {
+            width: 100%; /* Ensures video fills container width */
+            height: auto; /* Maintains aspect ratio */
+        }
+        .chat-container {
+            flex: 1; /* Takes up 30% of the available space */
+            max-width: 30%; /* Adjust as needed */
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .chat-messages {
+            flex: 1;
+            padding: 10px;
+            overflow-y: auto;
+            border-bottom: 1px solid #ccc;
+        }
+        .chat-input {
+            display: flex;
+        }
+        .chat-input input {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-top: 1px solid #ccc;
+        }
+        .chat-input button {
+            background-color: #800020; /* Burgundy */
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        .chat-input button:hover {
+            background-color: #660016;
+        }
+        .message {
+            margin-bottom: 10px;
+        }
+        .message.user {
+            text-align: right;
+        }
+        .message.user .text {
+            background-color: #800020; /* Burgundy */
+            color: white;
+        }
+        .message.bot .text {
+            background-color: #f2f2f2;
+            color: black;
+        }
+        .text {
+            display: inline-block;
+            padding: 10px;
+            border-radius: 8px;
+            max-width: 80%;
+        }
+        .footer {
+            background-color: #800020; /* Burgundy */
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+        }
+        .footer p {
+            margin: 0;
+        }
+    </style>
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <div class="logo">WineBuddy</div>
+    <ul class="navbar">
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Varieties</a></li>
+        <li><a href="#">About us</a></li>
+        <li><a href="#">Contact</a></li>
+        <li><a href="#">Sign Up</a></li>
+        <li><a href="#">Log Out</a></li>
+    </ul>
+</header>
+
+<div class="content">
+    <div class="video-container">
+        <video id="wine-video" controls autoplay loop>
+            <source src="/static/wine-video.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+    <div class="chat-container">
+        <div class="chat-messages" id="chat-messages"></div>
+        <div class="chat-input">
+            <input type="text" id="chat-input" placeholder="Type your message here..." />
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+</div>
+
+<footer class="footer">
+    <p>&copy; 2024 WineBuddy. All rights reserved.</p>
+</footer>
+
+<script>
+    async function sendMessage() {
+        const chatInput = document.getElementById('chat-input');
+        const userMessage = chatInput.value.trim();
+        if (!userMessage) return;
+
+        appendMessage('user', userMessage);
+
+        try {
+            const response = await fetch('/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: userMessage })
+            });
+            const data = await response.json();
+            appendMessage('bot', data.answer);
+        } catch (error) {
+            console.error('Error:', error);
+            appendMessage('bot', 'There was an error processing your request.');
+        }
+
+        chatInput.value = '';
+    }
+
+    function appendMessage(sender, text) {
+        const chatMessages = document.getElementById('chat-messages');
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add('message', sender);
+        const textDiv = document.createElement('div');
+        textDiv.classList.add('text');
+        textDiv.innerText = text;
+        messageDiv.appendChild(textDiv);
+        chatMessages.appendChild(messageDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    document.getElementById('chat-input').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            sendMessage();
+        }
+    });
+    // Display initial message
+    window.onload = function() {
+        appendMessage('bot', 'Hello! How can I assist you today?');
+    };
+</script>
+
+</body>
+</html>
