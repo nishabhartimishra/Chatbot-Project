@@ -68,6 +68,17 @@ This repository contains the code for a chatbot that uses pre-trained models to 
 
 ## Project Structure
 
+Chatbot-Project/
+│
+├── app.py
+├── chat.html
+├── Corpus.pdf
+├── Sample Question Answers.json
+├── requirements.txt
+├── static/
+│ └── wine-video.mp4
+└── README.md
+
 ## Overall Approach
 
 1. **Loading Q&A Pairs:**
