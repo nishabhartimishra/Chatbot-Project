@@ -124,5 +124,5 @@ A one-minute video showing the chatbot in action is included in the repository.
 
 ## Contact
 
-For any queries, please contact [your-email@example.com].
+For any queries, please contact mishranishabharti@gmail.com.
 
