@@ -76,7 +76,7 @@ Chatbot-Project/
 ├── Sample Question Answers.json
 ├── requirements.txt
 ├── static/
-│ └── wine-video.mp4
+│ └── wine_video.mp4
 └── README.md
 
 ## Overall Approach
